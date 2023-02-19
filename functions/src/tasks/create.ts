@@ -1,25 +1,12 @@
-import Ajv from 'ajv';
 import {Request, Response} from 'express';
 import { database } from '../services/firebase';
+import { getCreateValidator } from './validators';
 
 export async function create (req: Request, res: Response) {
-  const schema = {
-    type: "object",
-    properties: {
-      name: { type: "string" },
-      description: { type: "string" },
-      isDone: { type: "boolean" }
-    },
-    required: ["name", "description", "isDone"],
-    additionalProperties: false
-  }
-  const ajv = new Ajv();
-
-  const validate = ajv.compile(schema);
-
-  const isValid = validate(req.body);
+  const validator = getCreateValidator();
+  const isValid = validator(req.body);
   if (!isValid) {
-    res.status(400).send(validate.errors);
+    res.status(400).send(validator.errors);
     return;
   }
 

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import Ajv from 'ajv';
 import { database } from '../services/firebase';
+import { getUpdateValidator } from './validators';
 
 type FirebaseTask = {
   name: string;
@@ -12,24 +12,10 @@ type FirebaseTask = {
 export async function update(req: Request, res: Response) {
   const { taskId } = req.params;
 
-  const schema = {
-    type: "object",
-    properties: {
-      name: { type: "string" },
-      description: { type: "string" },
-      isDone: { type: "boolean" },
-      id: {type: "string"},
-    },
-    required: ["name", "description", "isDone"],
-    additionalProperties: false
-  }
-  const ajv = new Ajv();
-
-  const validate = ajv.compile(schema);
-
-  const isValid = validate(req.body);
+  const validator = getUpdateValidator();
+  const isValid = validator(req.body);
   if (!isValid) {
-    res.status(400).send(validate.errors);
+    res.status(400).send(validator.errors);
     return;
   }
 
