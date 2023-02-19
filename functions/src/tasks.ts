@@ -36,4 +36,14 @@ tasksRouter.post('/tasks', async function(req, res) {
   res.status(201).send(task);
 });
 
+tasksRouter.get('/tasks', async function(req, res) {
+  const tasks = await database.collection('tasks').get();
+
+  const allTasks: any[] = [];
+
+  tasks.forEach(task => allTasks.push(task.data()));
+
+  res.status(200).send(allTasks);
+});
+
 export default tasksRouter;
