@@ -4,7 +4,9 @@ import { database } from "../../services/firebase";
 describe('Creating Tasks', () => {
   afterEach(async () => {
     const documents = await database.collection('tasks').listDocuments();
-    documents.forEach(async (doc) => await doc.delete());
+    await Promise.all(
+      documents.map(async (doc) => await doc.delete()),
+    );
   });
 
   it("should create a new task", async () => {

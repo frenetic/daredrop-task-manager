@@ -19,10 +19,12 @@ describe('Retrieving Tasks', () => {
       },
     ];
 
-    tasks.forEach(async (task) => {
-      const entry = await database.collection('tasks').doc();
-      await entry.set({ ...task, id: entry.id });
-    });
+    await Promise.all(
+      tasks.map(async (task) => {
+        const entry = await database.collection('tasks').doc();
+        await entry.set({ ...task, id: entry.id });
+      }),
+    );
   });
 
   beforeAll(async () => {
@@ -39,7 +41,9 @@ describe('Retrieving Tasks', () => {
 
   afterAll(async () => {
     const documents = await database.collection('tasks').listDocuments();
-    documents.forEach(async (doc) => await doc.delete());
+    await Promise.all(
+      documents.map(async (doc) => await doc.delete()),
+    );
   });
 
   it('should retrive the task we want', async () => {

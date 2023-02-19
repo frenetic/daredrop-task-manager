@@ -22,28 +22,32 @@ describe('Listing Tasks', () => {
       }
     ];
 
-    tasks.forEach(async (task) => {
-      const entry = await database.collection('tasks').doc();
-      await entry.set({ ...task, id: entry.id });
-    });
-  });
+    await Promise.all(
+      tasks.map(async (task) => {
+        const entry = await database.collection('tasks').doc();
+        await entry.set({ ...task, id: entry.id });
+      }),
+    );
+});
 
-  afterAll(async () => {
-    const documents = await database.collection('tasks').listDocuments();
-    documents.forEach(async (doc) => await doc.delete());
-  });
+afterAll(async () => {
+  const documents = await database.collection('tasks').listDocuments();
+  await Promise.all(
+    documents.map(async (doc) => await doc.delete()),
+  );
+});
 
-  it('should list tasks', async () => {
-    const res = await req.get("/tasks").send();
+it('should list tasks', async () => {
+  const res = await req.get("/tasks").send();
 
-    expect(res.statusCode).toBe(200);
-    expect(res.body).toBeInstanceOf(Array);
-    expect(res.body.length).toBe(3);
+  expect(res.statusCode).toBe(200);
+  expect(res.body).toBeInstanceOf(Array);
+  expect(res.body.length).toBe(3);
 
-    const tasks = await database.collection('tasks').get();
-    const allTasks: any[] = [];
-    tasks.forEach(task => allTasks.push(task.data()));
+  const tasks = await database.collection('tasks').get();
+  const allTasks: any[] = [];
+  tasks.forEach(task => allTasks.push(task.data()));
 
-    expect(res.body).toStrictEqual(allTasks);
-  });
+  expect(res.body).toStrictEqual(allTasks);
+});
 });
