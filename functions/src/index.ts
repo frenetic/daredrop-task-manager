@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import * as express from 'express';
 
-import tasksRouter from "./tasks";
+import tasksRouter from "./tasks/router";
 
 const expressApp = express();
 
