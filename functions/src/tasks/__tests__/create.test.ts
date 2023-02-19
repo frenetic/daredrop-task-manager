@@ -2,13 +2,6 @@ import { req } from "../../../tests/helpers";
 import { database } from "../../services/firebase";
 
 describe('Creating Tasks', () => {
-  afterEach(async () => {
-    const documents = await database.collection('tasks').listDocuments();
-    await Promise.all(
-      documents.map(async (doc) => await doc.delete()),
-    );
-  });
-
   it("should create a new task", async () => {
     const newTask = {
       name: "first task",

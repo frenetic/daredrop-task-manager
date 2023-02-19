@@ -4,5 +4,6 @@ module.exports = {
     '^.+\\.(ts|tsx)?$': 'ts-jest',
     "^.+\\.(js|jsx)$": "babel-jest",
   },
-  modulePathIgnorePatterns: ["<rootDir>/lib/"]
+  modulePathIgnorePatterns: ["<rootDir>/lib/"],
+  setupFilesAfterEnv: ['<rootDir>/tests/setupTests.ts']
 };

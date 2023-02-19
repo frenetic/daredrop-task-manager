@@ -5,29 +5,7 @@ import { database } from "../../services/firebase";
 describe('Retrieving Tasks', () => {
   let taskId: string;
 
-  beforeAll(async () => {
-    const tasks = [
-      {
-        name: 'ignore this task',
-        description: 'this task will be ignore',
-        isDone: false,
-      },
-      {
-        name: 'ignore this other one as well',
-        description: 'this task will also be ignored',
-        isDone: true,
-      },
-    ];
-
-    await Promise.all(
-      tasks.map(async (task) => {
-        const entry = await database.collection('tasks').doc();
-        await entry.set({ ...task, id: entry.id });
-      }),
-    );
-  });
-
-  beforeAll(async () => {
+  beforeEach(async () => {
     const entry = await database.collection('tasks').doc();
     taskId = entry.id;
 
@@ -37,13 +15,6 @@ describe('Retrieving Tasks', () => {
       isDone: false,
       id: taskId,
     });
-  });
-
-  afterAll(async () => {
-    const documents = await database.collection('tasks').listDocuments();
-    await Promise.all(
-      documents.map(async (doc) => await doc.delete()),
-    );
   });
 
   it('should retrive the task we want', async () => {
