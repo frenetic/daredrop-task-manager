@@ -54,4 +54,10 @@ describe('Retrieving Tasks', () => {
       id: taskId,
     });
   });
+
+  it('should return 404 when not finding a task', async () => {
+    const res = await req.get('/tasks/iddqd_idkfa');
+
+    expect(res.statusCode).toBe(404);
+  });
 });

@@ -6,5 +6,10 @@ export async function retrieve(req: Request, res: Response) {
 
   const task = await database.collection('tasks').doc(taskId).get();
 
+  if (!task.exists) {
+    res.status(404).send();
+    return;
+  }
+
   res.status(200).send(task.data());
 }
