@@ -1,6 +1,6 @@
-import { Request, Response } from 'express';
-import { database } from '../services/firebase';
-import { getPartialUpdateValidator } from './validators';
+import {Request, Response} from "express";
+import {database} from "../services/firebase";
+import {getPartialUpdateValidator} from "./validators";
 
 type FirebaseTask = {
   name: string;
@@ -10,7 +10,7 @@ type FirebaseTask = {
 };
 
 export async function partialUpdate(req: Request, res: Response) {
-  const { taskId } = req.params;
+  const {taskId} = req.params;
 
   const validator = getPartialUpdateValidator();
   const isValid = validator(req.body);
@@ -19,7 +19,7 @@ export async function partialUpdate(req: Request, res: Response) {
     return;
   }
 
-  const task = await database.collection('tasks').doc(taskId);
+  const task = await database.collection("tasks").doc(taskId);
   const currentTask = await task.get();
 
   if (!currentTask.exists) {
@@ -28,14 +28,14 @@ export async function partialUpdate(req: Request, res: Response) {
   }
 
   const currentTaskData = currentTask.data() as FirebaseTask;
-  const updatedData: FirebaseTask = { ...currentTaskData, ...req.body, id: currentTaskData.id}
+  const updatedData: FirebaseTask = {...currentTaskData, ...req.body, id: currentTaskData.id};
 
-  await task.set(updatedData).catch(error => {
+  await task.set(updatedData).catch((error) => {
     return res.status(400).json({
-      status: 'error',
-      message: error.message
-    })
-  })
+      status: "error",
+      message: error.message,
+    });
+  });
 
   res.status(200).send(updatedData);
 }

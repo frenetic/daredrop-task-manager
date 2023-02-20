@@ -1,8 +1,8 @@
-import {Request, Response} from 'express';
-import { database } from '../services/firebase';
-import { getCreateValidator } from './validators';
+import {Request, Response} from "express";
+import {database} from "../services/firebase";
+import {getCreateValidator} from "./validators";
 
-export async function create (req: Request, res: Response) {
+export async function create(req: Request, res: Response) {
   const validator = getCreateValidator();
   const isValid = validator(req.body);
   if (!isValid) {
@@ -12,11 +12,11 @@ export async function create (req: Request, res: Response) {
 
   const task = req.body;
 
-  const entry = await database.collection('tasks').doc();
+  const entry = await database.collection("tasks").doc();
 
   task.id = entry.id;
 
   await entry.set(task);
 
   res.status(201).send(task);
-};
+}

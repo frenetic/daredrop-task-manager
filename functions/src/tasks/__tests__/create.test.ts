@@ -1,7 +1,7 @@
-import { req } from "../../../tests/helpers";
-import { database } from "../../services/firebase";
+import {req} from "../../../tests/helpers";
+import {database} from "../../services/firebase";
 
-describe('Creating Tasks', () => {
+describe("Creating Tasks", () => {
   it("should create a new task", async () => {
     const newTask = {
       name: "first task",
@@ -12,10 +12,10 @@ describe('Creating Tasks', () => {
     const res = await req.post("/tasks").send(newTask);
 
     expect(res.statusCode).toBe(201);
-    expect(res.body).toHaveProperty('id');
-    expect(res.body).toStrictEqual({ ...newTask, id: res.body.id });
+    expect(res.body).toHaveProperty("id");
+    expect(res.body).toStrictEqual({...newTask, id: res.body.id});
 
-    const taskFromDB = await database.collection('tasks').doc(res.body.id).get();
+    const taskFromDB = await database.collection("tasks").doc(res.body.id).get();
 
     expect(res.body).toStrictEqual(taskFromDB.data());
   });
