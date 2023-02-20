@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { database } from '../services/firebase';
+import { CollectionReference, Query } from 'firebase-admin/firestore';
 
 type Task = {
   name: string;
@@ -7,21 +8,12 @@ type Task = {
   isDone: boolean;
 };
 
-async function listAll(req: Request, res: Response) {
-  const tasks = await database.collection('tasks').get();
-
-  const allTasks: Task[] = [];
-
-  tasks.forEach(task => allTasks.push(task.data() as Task));
-
-  return res.status(200).send(allTasks);
-}
-
-async function filterList(req: Request, res: Response) {
-  let query = database.collection('tasks');
+export async function list(req: Request, res: Response) {
+  let query: CollectionReference | Query = database
+    .collection('tasks');
 
   if (req.query.hasOwnProperty('isDone')) {
-    query = query.where('isDone', '==', req.query.isDone === 'true') as any;
+    query = query.where('isDone', '==', req.query.isDone === 'true');
   }
 
   const results = await query.get();
@@ -30,12 +22,4 @@ async function filterList(req: Request, res: Response) {
   results.forEach(task => allTasks.push(task.data() as Task));
 
   return res.status(200).send(allTasks);
-}
-
-export async function list(req: Request, res: Response) {
-  if (!req.query) {
-    return listAll(req, res);
-  }
-
-  return filterList(req, res);
 }
