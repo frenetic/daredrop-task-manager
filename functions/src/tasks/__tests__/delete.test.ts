@@ -1,5 +1,6 @@
 import {req} from "../../../tests/helpers";
 import {database} from "../../services/firebase";
+import {Task} from "../types";
 
 
 describe("Deleting Tasks", () => {
@@ -22,8 +23,8 @@ describe("Deleting Tasks", () => {
     expect(res.statusCode).toBe(200);
 
     const tasks = await database.collection("tasks").get();
-    const allTasks: any[] = [];
-    tasks.forEach((task) => allTasks.push(task.data()));
+    const allTasks: Task[] = [];
+    tasks.forEach((task) => allTasks.push(task.data() as Task));
 
     expect(allTasks.length).toBe(2);
     expect(allTasks).toContainEqual(
@@ -48,8 +49,8 @@ describe("Deleting Tasks", () => {
     expect(res.statusCode).toBe(404);
 
     const tasks = await database.collection("tasks").get();
-    const allTasks: any[] = [];
-    tasks.forEach((task) => allTasks.push(task.data()));
+    const allTasks: Task[] = [];
+    tasks.forEach((task) => allTasks.push(task.data() as Task));
 
     expect(allTasks.length).toBe(3);
   });

@@ -1,5 +1,6 @@
 import {req} from "../../../tests/helpers";
 import {database} from "../../services/firebase";
+import {Task} from "../types";
 
 
 describe("Updating Tasks", () => {
@@ -34,8 +35,8 @@ describe("Updating Tasks", () => {
     });
 
     const tasks = await database.collection("tasks").get();
-    const allTasks: any[] = [];
-    tasks.forEach((task) => allTasks.push(task.data()));
+    const allTasks: Task[] = [];
+    tasks.forEach((task) => allTasks.push(task.data() as Task));
 
     expect(allTasks.length).toBe(3);
     expect(allTasks).toContainEqual({
@@ -72,8 +73,8 @@ describe("Updating Tasks", () => {
     });
 
     const tasks = await database.collection("tasks").get();
-    const allTasks: any[] = [];
-    tasks.forEach((task) => allTasks.push(task.data()));
+    const allTasks: Task[] = [];
+    tasks.forEach((task) => allTasks.push(task.data() as Task));
 
     expect(allTasks.length).toBe(3);
     expect(allTasks).toContainEqual({
