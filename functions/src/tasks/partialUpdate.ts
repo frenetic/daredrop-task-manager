@@ -1,13 +1,7 @@
 import {Request, Response} from "express";
 import {database} from "../services/firebase";
+import {TaskModel} from "./types";
 import {getPartialUpdateValidator} from "./validators";
-
-type FirebaseTask = {
-  name: string;
-  description: string;
-  isDone: boolean;
-  id: string;
-};
 
 export async function partialUpdate(req: Request, res: Response) {
   const {taskId} = req.params;
@@ -27,8 +21,8 @@ export async function partialUpdate(req: Request, res: Response) {
     return;
   }
 
-  const currentTaskData = currentTask.data() as FirebaseTask;
-  const updatedData: FirebaseTask = {...currentTaskData, ...req.body, id: currentTaskData.id};
+  const currentTaskData = currentTask.data() as TaskModel;
+  const updatedData: TaskModel = {...currentTaskData, ...req.body, id: currentTaskData.id};
 
   await task.set(updatedData).catch((error) => {
     return res.status(400).json({
